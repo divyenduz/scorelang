@@ -60,14 +60,6 @@ export class Lexer {
     return this.program.slice(startPosition, this.position).trim()
   }
 
-  private peekChar(): string {
-    if (this.readPosition >= this.program.length) {
-      return "";
-    } else {
-      return this.program[this.readPosition]!;
-    }
-  }
-
   private readNumber(): string {
     const startPosition = this.position;
     while (this.isDigit(this.ch)) {
