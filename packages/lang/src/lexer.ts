@@ -54,10 +54,10 @@ export class Lexer {
 
   private readIdentifier(): string {
     const startPosition = this.position;
-    while (this.isLetter(this.ch)) {
+    while (this.isLetter(this.ch) || this.ch === " ") {
       this.readChar();
     }
-    return this.program.slice(startPosition, this.position);
+    return this.program.slice(startPosition, this.position).trim()
   }
 
   private readNumber(): string {

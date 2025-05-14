@@ -5,7 +5,6 @@
 The development instance of the website is running at http://localhost:5173/
 
 ## Commands
-
 - Run tests: `bun test`
 - Run specific test: `bun test src/lexer.test.ts`
 - Build project: `bun build ./src/index.ts --compile --outfile scorelang`

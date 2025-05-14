@@ -39,4 +39,38 @@ describe("Lexer", () => {
       expect(token).toEqual(expectedToken);
     });
   });
+
+  it("should tokenize a string with team names with spaces", () => {
+    const input = `Manchester United 2-0 Arsenal;`;
+    const lexer = new Lexer(input);
+    [
+      { type: "TEAM_NAME" as const, value: "Manchester United" },
+      { type: "TEAM_SCORE" as const, value: "2" },
+      { type: "SCORE_SEPARATOR" as const, value: "-" },
+      { type: "TEAM_SCORE" as const, value: "0" },
+      { type: "TEAM_NAME" as const, value: "Arsenal" },
+      { type: "GAME_SEPARATOR" as const, value: ";" },
+      { type: "EOF" as const, value: "" },
+    ].forEach((expectedToken) => {
+      const token = lexer.nextToken();
+      expect(token).toEqual(expectedToken);
+    });
+  })
+
+  it("should tokenize a string with team names with multiple spaces", () => {
+    const input = `Manchester   United 2-0 Arsenal;`;
+    const lexer = new Lexer(input);
+    [
+      { type: "TEAM_NAME" as const, value: "Manchester   United" },
+      { type: "TEAM_SCORE" as const, value: "2" },
+      { type: "SCORE_SEPARATOR" as const, value: "-" },
+      { type: "TEAM_SCORE" as const, value: "0" },
+      { type: "TEAM_NAME" as const, value: "Arsenal" },
+      { type: "GAME_SEPARATOR" as const, value: ";" },
+      { type: "EOF" as const, value: "" },
+    ].forEach((expectedToken) => {
+      const token = lexer.nextToken();
+      expect(token).toEqual(expectedToken);
+    });
+  })
 });
