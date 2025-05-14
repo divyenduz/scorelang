@@ -18,6 +18,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "bun build ./src/index.ts --compile --outfile scorelang"
+    "build": "bun build ./src/index.ts --compile --outfile scorelang",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint ."
   }
 }
