@@ -17,6 +17,12 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["TournamentDurableObject"]
+    }
+  ],
   "durable_objects": {
     "bindings": [
       {
