@@ -10,7 +10,9 @@ export interface Statement extends Node {
 }
 
 export class Team {
-  constructor(private token: Token, private name: string) {}
+  constructor(private token: Token, private name: string) {
+    this.name; // disable-lint
+  }
 
   tokenLiteral(): string {
     return this.token.value;
@@ -18,7 +20,9 @@ export class Team {
 }
 
 export class Score {
-  constructor(private token: Token, private value: number) {}
+  constructor(private token: Token, private value: number) {
+    this.token; // disable-lint
+  }
 
   tokenLiteral(): number {
     return this.value;

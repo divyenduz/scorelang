@@ -1,4 +1,5 @@
 import type { GameResult } from "./evaluator";
+import Table from "cli-table3";
 
 type TeamStats = {
   points: number;
@@ -67,7 +68,6 @@ export const calculatePointsTable = (results: GameResult[]) => {
 };
 
 export const printPointsTable = (pointsTable: Map<string, TeamStats>) => {
-  const Table = require("cli-table3");
   const sortedTeams = [...pointsTable.entries()].sort(
     (a, b) => b[1].points - a[1].points
   );
