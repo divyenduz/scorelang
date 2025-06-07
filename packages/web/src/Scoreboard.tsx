@@ -3,7 +3,7 @@ import { Card, CardContent } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import { Plus, Minus } from "lucide-react";
 
-type Team = "🏀 Warriors" | "⚽ Tigers" | "🏈 Eagles";
+type Team = "🩷 Team A" | "⚪ Team B" | "⚫ Team C";
 
 type Game = {
   home: Team;
@@ -12,7 +12,7 @@ type Game = {
   awayScore: number;
 };
 
-const TEAMS: Team[] = ["🏀 Warriors", "⚽ Tigers", "🏈 Eagles"];
+const TEAMS: Team[] = ["🩷 Team A", "⚪ Team B", "⚫ Team C"];
 
 export default function Scoreboard() {
   const [games, setGames] = useState<Game[]>([
@@ -55,7 +55,9 @@ export default function Scoreboard() {
     <div className="flex flex-col items-center gap-6 py-8 text-center w-full max-w-2xl">
       <div className="text-center mb-4">
         <h1 className="text-4xl font-bold mb-2">🏆 Scoreboard</h1>
-        <p className="text-white/80 text-lg">Track your game scores with style!</p>
+        <p className="text-white/80 text-lg">
+          Track your game scores with style!
+        </p>
       </div>
 
       {games.map((game, idx) => {
@@ -64,8 +66,8 @@ export default function Scoreboard() {
           <Card
             key={`${game.home}-vs-${game.away}-${idx}`}
             className={`w-full p-8 transition-all duration-500 backdrop-blur-md bg-white/10 border-white/20 ${
-              isCurrent 
-                ? "scale-105 shadow-2xl bg-white/20 border-white/30" 
+              isCurrent
+                ? "scale-105 shadow-2xl bg-white/20 border-white/30"
                 : "opacity-60 scale-95"
             }`}
           >
