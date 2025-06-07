@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import { Plus, Minus, Trophy, FileText, Target } from "lucide-react";
@@ -59,6 +59,88 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
       return new Map();
     }
   }, [tournamentText]);
+
+  // Update games array when tournament text changes
+  useEffect(() => {
+    if (!tournamentText.trim()) return;
+
+    try {
+      const lexer = new Lexer(tournamentText);
+      const parser = new Parser(lexer);
+      const program = parser.parse();
+      const evaluator = new Evaluator();
+      const { results } = evaluator.evaluate(program);
+
+      // Convert GameResults back to Game format
+      const parsedGames: Game[] = results.map((result) => {
+        if (result.type === "RESOLVED") {
+          // Map scorelang team names back to display names
+          const winningTeamDisplay =
+            (Object.entries(TEAM_MAP).find(
+              ([_, scoreTeam]) => scoreTeam === result.winningTeam
+            )?.[0] as Team) || "🩷 Team A";
+          const losingTeamDisplay =
+            (Object.entries(TEAM_MAP).find(
+              ([_, scoreTeam]) => scoreTeam === result.losingTeam
+            )?.[0] as Team) || "⚪ Team B";
+
+          return {
+            home: winningTeamDisplay,
+            away: losingTeamDisplay,
+            homeScore: result.winningTeamScore,
+            awayScore: result.losingTeamScore,
+          };
+        } else {
+          // DRAW
+          const leftTeamDisplay =
+            (Object.entries(TEAM_MAP).find(
+              ([_, scoreTeam]) => scoreTeam === result.leftTeam
+            )?.[0] as Team) || "🩷 Team A";
+          const rightTeamDisplay =
+            (Object.entries(TEAM_MAP).find(
+              ([_, scoreTeam]) => scoreTeam === result.rightTeam
+            )?.[0] as Team) || "⚪ Team B";
+
+          return {
+            home: leftTeamDisplay,
+            away: rightTeamDisplay,
+            homeScore: result.leftTeamScore,
+            awayScore: result.rightTeamScore,
+          };
+        }
+      });
+
+      // Add current live game if games array is not empty
+      if (parsedGames.length > 0) {
+        const lastGame = parsedGames[parsedGames.length - 1];
+        // Identify idle team for next game
+        const idle = TEAMS.find(
+          (t) => t !== lastGame.home && t !== lastGame.away
+        )!;
+        parsedGames.push({
+          home: lastGame.away,
+          away: idle,
+          homeScore: 0,
+          awayScore: 0,
+        });
+      }
+
+      setGames(() =>
+        parsedGames.length > 0
+          ? parsedGames
+          : [
+              {
+                home: "🩷 Team A",
+                away: "⚪ Team B",
+                homeScore: 0,
+                awayScore: 0,
+              },
+            ]
+      );
+    } catch (error) {
+      console.error("Error parsing tournament text for games:", error);
+    }
+  }, [tournamentText, setGames]);
 
   const updateScore = (side: "home" | "away", delta: 1 | -1) => {
     setGames((prev) => {
@@ -272,18 +354,14 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
         <Card className="w-full backdrop-blur-md bg-white/10 border-white/20">
           <CardContent className="p-4 sm:p-6">
             <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-              📝 Tournament (ScoreLang)
+              📝 ScoreLang Code
             </h3>
-            {tournamentText ? (
-              <pre className="text-white/90 bg-black/20 p-4 rounded-lg text-xs sm:text-sm font-mono overflow-x-auto min-h-[200px]">
-                {tournamentText}
-              </pre>
-            ) : (
-              <div className="text-gray-700 text-center py-8">
-                No games finalized yet. Complete some games in the Score
-                Management tab to see ScoreLang output.
-              </div>
-            )}
+            <textarea
+              className="w-full text-white/90 bg-black/20 p-4 rounded-lg text-xs sm:text-sm font-mono overflow-x-auto min-h-[200px] resize-none border border-white/20 focus:border-white/40 focus:outline-none"
+              value={tournamentText || ""}
+              onChange={(e) => setTournamentText(() => e.target.value)}
+              placeholder="No games finalized yet. Complete some games in the Score Management tab to see ScoreLang output, or write your own ScoreLang code here."
+            />
           </CardContent>
         </Card>
       )}
