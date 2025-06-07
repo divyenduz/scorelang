@@ -21,11 +21,15 @@ export function useTournamentState(tournamentId: string) {
   const [tournamentText, setTournamentText] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load state from durable object or localStorage (fallback for development)
+  // Load state from API
   useEffect(() => {
     const loadTournamentState = async () => {
       try {
-        const response = await fetch(`/api/tournament/${tournamentId}`);
+        const baseUrl =
+          import.meta.env.VITE_API_BASE_URL || "https://score.zoid.dev";
+        const response = await fetch(
+          `${baseUrl}/api/tournament/${tournamentId}`
+        );
         if (
           response.ok &&
           response.headers.get("content-type")?.includes("application/json")
@@ -37,36 +41,9 @@ export function useTournamentState(tournamentId: string) {
           if (state.tournamentText) {
             setTournamentText(state.tournamentText);
           }
-        } else {
-          // Fallback to localStorage for development
-          const localState = localStorage.getItem(`tournament_${tournamentId}`);
-          if (localState) {
-            const state: TournamentState = JSON.parse(localState);
-            if (state.games.length > 0) {
-              setGames(state.games);
-            }
-            if (state.tournamentText) {
-              setTournamentText(state.tournamentText);
-            }
-          }
         }
       } catch (error) {
         console.error("Failed to load tournament state:", error);
-        // Try localStorage as fallback
-        try {
-          const localState = localStorage.getItem(`tournament_${tournamentId}`);
-          if (localState) {
-            const state: TournamentState = JSON.parse(localState);
-            if (state.games.length > 0) {
-              setGames(state.games);
-            }
-            if (state.tournamentText) {
-              setTournamentText(state.tournamentText);
-            }
-          }
-        } catch (localError) {
-          console.error("Failed to load from localStorage:", localError);
-        }
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +52,7 @@ export function useTournamentState(tournamentId: string) {
     loadTournamentState();
   }, [tournamentId]);
 
-  // Save state to durable object or localStorage (fallback for development)
+  // Save state to API
   const saveState = useCallback(
     async (newGames?: Game[], newTournamentText?: string) => {
       try {
@@ -87,61 +64,25 @@ export function useTournamentState(tournamentId: string) {
           updateData.tournamentText = newTournamentText;
         }
 
-        const response = await fetch(`/api/tournament/${tournamentId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updateData),
-        });
-
-        if (
-          !response.ok ||
-          !response.headers.get("content-type")?.includes("application/json")
-        ) {
-          // Fallback to localStorage for development
-          const currentState = localStorage.getItem(
-            `tournament_${tournamentId}`
-          );
-          const fullState: TournamentState = currentState
-            ? JSON.parse(currentState)
-            : { games: [], tournamentText: "" };
-
-          if (newGames !== undefined) {
-            fullState.games = newGames;
+        const baseUrl =
+          import.meta.env.VITE_API_BASE_URL || "https://score.zoid.dev";
+        const response = await fetch(
+          `${baseUrl}/api/tournament/${tournamentId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updateData),
           }
-          if (newTournamentText !== undefined) {
-            fullState.tournamentText = newTournamentText;
-          }
+        );
 
-          localStorage.setItem(
-            `tournament_${tournamentId}`,
-            JSON.stringify(fullState)
+        if (!response.ok) {
+          console.error(
+            "Failed to save tournament state:",
+            response.statusText
           );
         }
       } catch (error) {
         console.error("Failed to save tournament state:", error);
-        // Fallback to localStorage
-        try {
-          const currentState = localStorage.getItem(
-            `tournament_${tournamentId}`
-          );
-          const fullState: TournamentState = currentState
-            ? JSON.parse(currentState)
-            : { games: [], tournamentText: "" };
-
-          if (newGames !== undefined) {
-            fullState.games = newGames;
-          }
-          if (newTournamentText !== undefined) {
-            fullState.tournamentText = newTournamentText;
-          }
-
-          localStorage.setItem(
-            `tournament_${tournamentId}`,
-            JSON.stringify(fullState)
-          );
-        } catch (localError) {
-          console.error("Failed to save to localStorage:", localError);
-        }
       }
     },
     [tournamentId]
