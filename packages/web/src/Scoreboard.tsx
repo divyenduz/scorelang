@@ -176,7 +176,9 @@ export default function Scoreboard() {
                   {isCurrent && (
                     <div className="flex items-center gap-2">
                       <span className="text-xl sm:text-2xl">🎮</span>
-                      <h2 className="text-xl sm:text-2xl font-bold text-white">Live Game</h2>
+                      <h2 className="text-xl sm:text-2xl font-bold text-white">
+                        Live Game
+                      </h2>
                       <span className="text-xl sm:text-2xl">🎮</span>
                     </div>
                   )}
@@ -185,26 +187,70 @@ export default function Scoreboard() {
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-400 px-3 sm:px-4 py-2 rounded-xl text-center">
                       {game.home}
                     </div>
-                    <span className="text-2xl sm:text-3xl animate-pulse">⚡</span>
+                    <span className="text-2xl sm:text-3xl animate-pulse">
+                      ⚡
+                    </span>
                     <div className="bg-gradient-to-r from-emerald-500 to-teal-400 px-3 sm:px-4 py-2 rounded-xl text-center">
                       {game.away}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-8 sm:gap-16">
-                    <ScoreColumn
-                      score={game.homeScore}
-                      editable={isCurrent}
-                      onInc={() => updateScore("home", 1)}
-                      onDec={() => updateScore("home", -1)}
-                    />
-                    <ScoreColumn
-                      score={game.awayScore}
-                      editable={isCurrent}
-                      onInc={() => updateScore("away", 1)}
-                      onDec={() => updateScore("away", -1)}
-                    />
-                  </div>
+                  {isCurrent ? (
+                    <div className="flex items-center gap-2 sm:gap-4 w-full justify-center">
+                      <Button
+                        size="icon"
+                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
+                        onClick={() => updateScore("home", 1)}
+                      >
+                        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </Button>
+                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-xl px-3 py-2 border border-white/30">
+                        <span className="text-2xl sm:text-3xl font-bold tabular-nums text-white drop-shadow-lg">
+                          {game.homeScore}
+                        </span>
+                      </div>
+                      <Button
+                        size="icon"
+                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
+                        onClick={() => updateScore("home", -1)}
+                      >
+                        <Minus className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </Button>
+                      <span className="text-xl sm:text-2xl mx-2">-</span>
+                      <Button
+                        size="icon"
+                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
+                        onClick={() => updateScore("away", 1)}
+                      >
+                        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </Button>
+                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-xl px-3 py-2 border border-white/30">
+                        <span className="text-2xl sm:text-3xl font-bold tabular-nums text-white drop-shadow-lg">
+                          {game.awayScore}
+                        </span>
+                      </div>
+                      <Button
+                        size="icon"
+                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
+                        onClick={() => updateScore("away", -1)}
+                      >
+                        <Minus className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-8 sm:gap-16">
+                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
+                        <span className="text-4xl sm:text-6xl font-bold tabular-nums text-white drop-shadow-lg">
+                          {game.homeScore}
+                        </span>
+                      </div>
+                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
+                        <span className="text-4xl sm:text-6xl font-bold tabular-nums text-white drop-shadow-lg">
+                          {game.awayScore}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -232,7 +278,8 @@ export default function Scoreboard() {
               </pre>
             ) : (
               <div className="text-gray-700 text-center py-8">
-                No games finalized yet. Complete some games in the Score Management tab to see ScoreLang output.
+                No games finalized yet. Complete some games in the Score
+                Management tab to see ScoreLang output.
               </div>
             )}
           </CardContent>
@@ -254,7 +301,9 @@ export default function Scoreboard() {
                       <th className="text-center py-2 px-1">Wins</th>
                       <th className="text-center py-2 px-1">Losses</th>
                       <th className="text-center py-2 px-1">Draws</th>
-                      <th className="text-center py-2 px-2 font-bold">Points</th>
+                      <th className="text-center py-2 px-2 font-bold">
+                        Points
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -268,10 +317,18 @@ export default function Scoreboard() {
                           )?.[0] || team;
                         return (
                           <tr key={team} className="border-b border-white/10">
-                            <td className="py-2 px-2 font-semibold">{displayName}</td>
-                            <td className="text-center py-2 px-1">{stats.wins}</td>
-                            <td className="text-center py-2 px-1">{stats.losses}</td>
-                            <td className="text-center py-2 px-1">{stats.draws}</td>
+                            <td className="py-2 px-2 font-semibold">
+                              {displayName}
+                            </td>
+                            <td className="text-center py-2 px-1">
+                              {stats.wins}
+                            </td>
+                            <td className="text-center py-2 px-1">
+                              {stats.losses}
+                            </td>
+                            <td className="text-center py-2 px-1">
+                              {stats.draws}
+                            </td>
                             <td className="text-center py-2 px-2 font-bold text-yellow-400">
                               {stats.points}
                             </td>
@@ -283,7 +340,8 @@ export default function Scoreboard() {
               </div>
             ) : (
               <div className="text-gray-700 text-center py-8">
-                No points table available yet. Complete some games in the Score Management tab to see the points table.
+                No points table available yet. Complete some games in the Score
+                Management tab to see the points table.
               </div>
             )}
           </CardContent>
@@ -293,44 +351,4 @@ export default function Scoreboard() {
   );
 }
 
-function ScoreColumn({
-  score,
-  editable,
-  onInc,
-  onDec,
-}: {
-  score: number;
-  editable: boolean;
-  onInc: () => void;
-  onDec: () => void;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-3">
-      {editable && (
-        <Button
-          size="icon"
-          className="aspect-square h-12 w-12 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-          onClick={onInc}
-        >
-          <Plus className="h-6 w-6" />
-        </Button>
-      )}
 
-      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
-        <span className="text-4xl sm:text-6xl font-bold tabular-nums text-white drop-shadow-lg">
-          {score}
-        </span>
-      </div>
-
-      {editable && (
-        <Button
-          size="icon"
-          className="aspect-square h-12 w-12 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-          onClick={onDec}
-        >
-          <Minus className="h-6 w-6" />
-        </Button>
-      )}
-    </div>
-  );
-}
