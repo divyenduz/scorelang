@@ -1,10 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 
-type Team = "🩷 Team A" | "⚪ Team B" | "⚫ Team C";
-
 type Game = {
-  home: Team;
-  away: Team;
+  home: string;
+  away: string;
   homeScore: number;
   awayScore: number;
 };
@@ -16,7 +14,7 @@ interface TournamentState {
 
 export function useTournamentState(tournamentId: string) {
   const [games, setGames] = useState<Game[]>([
-    { home: "🩷 Team A", away: "⚪ Team B", homeScore: 0, awayScore: 0 },
+    { home: "TeamA", away: "TeamB", homeScore: 0, awayScore: 0 },
   ]);
   const [tournamentText, setTournamentText] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);

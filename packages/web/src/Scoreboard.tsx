@@ -10,22 +10,11 @@ import {
 } from "../../lang/src/index";
 import { useTournamentState } from "./hooks/useTournamentState";
 
-type Team = "🩷 Team A" | "⚪ Team B" | "⚫ Team C";
-
 type Game = {
-  home: Team;
-  away: Team;
+  home: string;
+  away: string;
   homeScore: number;
   awayScore: number;
-};
-
-const TEAMS: Team[] = ["🩷 Team A", "⚪ Team B", "⚫ Team C"];
-
-// Map display names to scorelang team names
-const TEAM_MAP: Record<Team, string> = {
-  "🩷 Team A": "TeamA",
-  "⚪ Team B": "TeamB",
-  "⚫ Team C": "TeamC",
 };
 
 interface ScoreboardProps {
@@ -42,6 +31,36 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
   );
 
   const currentGame = games[games.length - 1]!;
+
+  // Extract team names dynamically from parsed results
+  const extractedTeams = useMemo(() => {
+    if (!tournamentText.trim()) return ["TeamA", "TeamB", "TeamC"];
+
+    try {
+      const lexer = new Lexer(tournamentText);
+      const parser = new Parser(lexer);
+      const program = parser.parse();
+      const evaluator = new Evaluator();
+      const { results } = evaluator.evaluate(program);
+      
+      const teamSet = new Set<string>();
+      results.forEach(result => {
+        if (result.type === "RESOLVED") {
+          teamSet.add(result.winningTeam);
+          teamSet.add(result.losingTeam);
+        } else {
+          teamSet.add(result.leftTeam);
+          teamSet.add(result.rightTeam);
+        }
+      });
+      
+      const teams = Array.from(teamSet);
+      return teams.length > 0 ? teams : ["TeamA", "TeamB", "TeamC"];
+    } catch (error) {
+      console.error("Error extracting teams:", error);
+      return ["TeamA", "TeamB", "TeamC"];
+    }
+  }, [tournamentText]);
 
   // Parse tournament text and calculate points table using scorelang
   const pointsTable = useMemo(() => {
@@ -74,36 +93,17 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
       // Convert GameResults back to Game format
       const parsedGames: Game[] = results.map((result) => {
         if (result.type === "RESOLVED") {
-          // Map scorelang team names back to display names
-          const winningTeamDisplay =
-            (Object.entries(TEAM_MAP).find(
-              ([_, scoreTeam]) => scoreTeam === result.winningTeam
-            )?.[0] as Team) || "🩷 Team A";
-          const losingTeamDisplay =
-            (Object.entries(TEAM_MAP).find(
-              ([_, scoreTeam]) => scoreTeam === result.losingTeam
-            )?.[0] as Team) || "⚪ Team B";
-
           return {
-            home: winningTeamDisplay,
-            away: losingTeamDisplay,
+            home: result.winningTeam,
+            away: result.losingTeam,
             homeScore: result.winningTeamScore,
             awayScore: result.losingTeamScore,
           };
         } else {
           // DRAW
-          const leftTeamDisplay =
-            (Object.entries(TEAM_MAP).find(
-              ([_, scoreTeam]) => scoreTeam === result.leftTeam
-            )?.[0] as Team) || "🩷 Team A";
-          const rightTeamDisplay =
-            (Object.entries(TEAM_MAP).find(
-              ([_, scoreTeam]) => scoreTeam === result.rightTeam
-            )?.[0] as Team) || "⚪ Team B";
-
           return {
-            home: leftTeamDisplay,
-            away: rightTeamDisplay,
+            home: result.leftTeam,
+            away: result.rightTeam,
             homeScore: result.leftTeamScore,
             awayScore: result.rightTeamScore,
           };
@@ -114,7 +114,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
       if (parsedGames.length > 0) {
         const lastGame = parsedGames[parsedGames.length - 1];
         // Identify idle team for next game
-        const idle = TEAMS.find(
+        const idle = extractedTeams.find(
           (t) => t !== lastGame.home && t !== lastGame.away
         )!;
         parsedGames.push({
@@ -130,8 +130,8 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
           ? parsedGames
           : [
               {
-                home: "🩷 Team A",
-                away: "⚪ Team B",
+                home: extractedTeams[0],
+                away: extractedTeams[1],
                 homeScore: 0,
                 awayScore: 0,
               },
@@ -158,12 +158,8 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
   const finalizeCurrentGame = () => {
     const game = currentGame;
 
-    // Convert to scorelang format
-    const homeTeamName = TEAM_MAP[game.home];
-    const awayTeamName = TEAM_MAP[game.away];
-
-    // Create scorelang game statement
-    const gameStatement = `${homeTeamName} ${game.homeScore}-${game.awayScore} ${awayTeamName};`;
+    // Create scorelang game statement using team names directly
+    const gameStatement = `${game.home} ${game.homeScore}-${game.awayScore} ${game.away};`;
 
     // Append to tournament text
     setTournamentText((prev) =>
@@ -178,7 +174,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
     setGames((prev) => {
       const last = prev[prev.length - 1]!;
       // Identify idle team (one that did NOT play last game)
-      const idle = TEAMS.find((t) => t !== last.home && t !== last.away)!;
+      const idle = extractedTeams.find((t) => t !== last.home && t !== last.away)!;
       // Persist the *away* team so one team appears twice in a row
       const newGame: Game = {
         home: last.away,
@@ -390,15 +386,10 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                     {[...pointsTable.entries()]
                       .sort((a, b) => b[1].points - a[1].points)
                       .map(([team, stats]) => {
-                        // Find the display name for the team
-                        const displayName =
-                          Object.entries(TEAM_MAP).find(
-                            ([_, scoreTeam]) => scoreTeam === team
-                          )?.[0] || team;
                         return (
                           <tr key={team} className="border-b border-gray-300">
                             <td className="py-2 px-2 font-semibold">
-                              {displayName}
+                              {team}
                             </td>
                             <td className="text-center py-2 px-1">
                               {stats.wins}
