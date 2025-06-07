@@ -20,7 +20,7 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_classes": ["TournamentDurableObject"]
+      "new_sqlite_classes": ["TournamentDurableObject"]
     }
   ],
   "durable_objects": {
