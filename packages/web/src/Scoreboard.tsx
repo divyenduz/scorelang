@@ -384,17 +384,18 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
               <div className="overflow-x-auto">
                 <table className="w-full text-black text-sm sm:text-base">
                   <thead>
-                    <tr className="border-b border-gray-400">
-                      <th className="text-center py-2 px-2">Pos</th>
-                      <th className="text-left py-2 px-2">Team</th>
-                      <th className="text-center py-2 px-1">Wins</th>
-                      <th className="text-center py-2 px-1">Losses</th>
-                      <th className="text-center py-2 px-1">Draws</th>
-                      <th className="text-center py-2 px-2 font-bold">
-                        Points
-                      </th>
+                  <tr className="border-b border-gray-400">
+                  <th className="text-center py-2 px-2">Pos</th>
+                  <th className="text-left py-2 px-2">Team</th>
+                  <th className="text-center py-2 px-1">Games</th>
+                  <th className="text-center py-2 px-1">Wins</th>
+                  <th className="text-center py-2 px-1">Losses</th>
+                  <th className="text-center py-2 px-1">Draws</th>
+                  <th className="text-center py-2 px-2 font-bold">
+                    Points
+                    </th>
                     </tr>
-                  </thead>
+                   </thead>
                   <tbody>
                     {[...pointsTable.entries()]
                       .sort((a, b) => b[1].points - a[1].points)
@@ -405,11 +406,14 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                               {index + 1}
                             </td>
                             <td className="text-left py-2 px-2 font-semibold">
-                              {team}
+                            {team}
                             </td>
                             <td className="text-center py-2 px-1">
-                              {stats.wins}
+                            {stats.wins + stats.losses + stats.draws}
                             </td>
+                             <td className="text-center py-2 px-1">
+                               {stats.wins}
+                             </td>
                             <td className="text-center py-2 px-1">
                               {stats.losses}
                             </td>
