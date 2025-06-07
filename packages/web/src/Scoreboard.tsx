@@ -33,8 +33,9 @@ interface ScoreboardProps {
 }
 
 export default function Scoreboard({ tournamentId }: ScoreboardProps) {
-  const { games, tournamentText, isLoading, setGames, setTournamentText } = useTournamentState(tournamentId);
-  
+  const { games, tournamentText, setGames, setTournamentText } =
+    useTournamentState(tournamentId);
+
   // Active tab state
   const [activeTab, setActiveTab] = useState<"score" | "scorelang" | "table">(
     "score"

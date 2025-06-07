@@ -1,5 +1,8 @@
 export interface DurableObjectState {
-  storage: DurableObjectStorage;
+  storage: {
+    get: (key: string) => Promise<any>;
+    put: (key: string, value: any) => Promise<void>;
+  };
 }
 
 export interface TournamentState {
@@ -20,7 +23,6 @@ export class TournamentDurableObject {
   }
 
   async fetch(request: Request): Promise<Response> {
-    const url = new URL(request.url);
     
     switch (request.method) {
       case 'GET':
@@ -35,8 +37,8 @@ export class TournamentDurableObject {
   }
 
   private async handleGet(): Promise<Response> {
-    const games = await this.state.storage.get<TournamentState['games']>('games') ?? [];
-    const tournamentText = await this.state.storage.get<string>('tournamentText') ?? '';
+    const games = await this.state.storage.get('games') ?? [];
+    const tournamentText = await this.state.storage.get('tournamentText') ?? '';
     
     const state: TournamentState = {
       games,
