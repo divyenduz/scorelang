@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@scorelang/lang": "*",
+    "@types/bun": "^1.2.15",
     "@types/node": "^22.15.30",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.0.0",

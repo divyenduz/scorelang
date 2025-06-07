@@ -57,7 +57,7 @@ export class Lexer {
     while (this.isLetter(this.ch) || this.ch === " ") {
       this.readChar();
     }
-    return this.program.slice(startPosition, this.position).trim()
+    return this.program.slice(startPosition, this.position).trim();
   }
 
   private readNumber(): string {

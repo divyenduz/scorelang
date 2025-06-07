@@ -55,7 +55,7 @@ describe("Lexer", () => {
       const token = lexer.nextToken();
       expect(token).toEqual(expectedToken);
     });
-  })
+  });
 
   it("should tokenize a string with team names with multiple spaces", () => {
     const input = `Manchester   United 2-0 Arsenal;`;
@@ -72,5 +72,5 @@ describe("Lexer", () => {
       const token = lexer.nextToken();
       expect(token).toEqual(expectedToken);
     });
-  })
+  });
 });
