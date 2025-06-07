@@ -33,3 +33,9 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: packages/web
+          preCommands: |
+            echo "*** pre commands ***"
+            echo `pwd`
+            npx wrangler --version
+            npm install wrangler@latest
+            echo "******"
