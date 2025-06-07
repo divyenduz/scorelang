@@ -294,9 +294,9 @@ export default function Scoreboard() {
             </h3>
             {pointsTable.size > 0 ? (
               <div className="overflow-x-auto">
-                <table className="w-full text-white text-sm sm:text-base">
+                <table className="w-full text-black text-sm sm:text-base">
                   <thead>
-                    <tr className="border-b border-white/20">
+                    <tr className="border-b border-gray-400">
                       <th className="text-left py-2 px-2">Team</th>
                       <th className="text-center py-2 px-1">Wins</th>
                       <th className="text-center py-2 px-1">Losses</th>
@@ -316,7 +316,7 @@ export default function Scoreboard() {
                             ([_, scoreTeam]) => scoreTeam === team
                           )?.[0] || team;
                         return (
-                          <tr key={team} className="border-b border-white/10">
+                          <tr key={team} className="border-b border-gray-300">
                             <td className="py-2 px-2 font-semibold">
                               {displayName}
                             </td>
@@ -329,7 +329,7 @@ export default function Scoreboard() {
                             <td className="text-center py-2 px-1">
                               {stats.draws}
                             </td>
-                            <td className="text-center py-2 px-2 font-bold text-yellow-400">
+                            <td className="text-center py-2 px-2 font-bold text-orange-600">
                               {stats.points}
                             </td>
                           </tr>
@@ -339,7 +339,7 @@ export default function Scoreboard() {
                 </table>
               </div>
             ) : (
-              <div className="text-gray-700 text-center py-8">
+              <div className="text-black text-center py-8">
                 No points table available yet. Complete some games in the Score
                 Management tab to see the points table.
               </div>
@@ -350,5 +350,3 @@ export default function Scoreboard() {
     </div>
   );
 }
-
-
