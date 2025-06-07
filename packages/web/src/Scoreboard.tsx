@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import { Plus, Minus } from "lucide-react";
+import {
+  calculatePointsTable,
+  Evaluator,
+  Lexer,
+  Parser,
+} from "../../lang/src/index";
 
 type Team = "🩷 Team A" | "⚪ Team B" | "⚫ Team C";
 
@@ -14,12 +20,38 @@ type Game = {
 
 const TEAMS: Team[] = ["🩷 Team A", "⚪ Team B", "⚫ Team C"];
 
+// Map display names to scorelang team names
+const TEAM_MAP: Record<Team, string> = {
+  "🩷 Team A": "TeamA",
+  "⚪ Team B": "TeamB",
+  "⚫ Team C": "TeamC",
+};
+
 export default function Scoreboard() {
   const [games, setGames] = useState<Game[]>([
     { home: TEAMS[0], away: TEAMS[1], homeScore: 0, awayScore: 0 },
   ]);
+  // Tournament state as scorelang text
+  const [tournamentText, setTournamentText] = useState<string>("");
 
   const currentGame = games[games.length - 1];
+
+  // Parse tournament text and calculate points table using scorelang
+  const pointsTable = useMemo(() => {
+    if (!tournamentText.trim()) return new Map();
+
+    try {
+      const lexer = new Lexer(tournamentText);
+      const parser = new Parser(lexer);
+      const program = parser.parse();
+      const evaluator = new Evaluator();
+      const { results } = evaluator.evaluate(program);
+      return calculatePointsTable(results);
+    } catch (error) {
+      console.error("Error parsing tournament text:", error);
+      return new Map();
+    }
+  }, [tournamentText]);
 
   const updateScore = (side: "home" | "away", delta: 1 | -1) => {
     setGames((prev) => {
@@ -34,7 +66,26 @@ export default function Scoreboard() {
     });
   };
 
+  const finalizeCurrentGame = () => {
+    const game = currentGame;
+
+    // Convert to scorelang format
+    const homeTeamName = TEAM_MAP[game.home];
+    const awayTeamName = TEAM_MAP[game.away];
+
+    // Create scorelang game statement
+    const gameStatement = `${homeTeamName} ${game.homeScore}-${game.awayScore} ${awayTeamName};`;
+
+    // Append to tournament text
+    setTournamentText((prev) =>
+      prev ? `${prev}\n${gameStatement}` : gameStatement
+    );
+  };
+
   const handleNextGame = () => {
+    // Finalize current game first
+    finalizeCurrentGame();
+
     setGames((prev) => {
       const last = prev[prev.length - 1];
       // Identify idle team (one that did NOT play last game)
@@ -116,6 +167,64 @@ export default function Scoreboard() {
       >
         🎯 Next Game
       </Button>
+
+      {tournamentText && (
+        <Card className="w-full mt-8 backdrop-blur-md bg-white/10 border-white/20">
+          <CardContent className="p-6">
+            <h3 className="text-2xl font-bold text-white mb-4 text-center">
+              📝 Tournament (ScoreLang)
+            </h3>
+            <pre className="text-white/80 bg-black/20 p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              {tournamentText}
+            </pre>
+          </CardContent>
+        </Card>
+      )}
+
+      {pointsTable.size > 0 && (
+        <Card className="w-full mt-8 backdrop-blur-md bg-white/10 border-white/20">
+          <CardContent className="p-6">
+            <h3 className="text-2xl font-bold text-white mb-4 text-center">
+              🏆 Points Table
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-white">
+                <thead>
+                  <tr className="border-b border-white/20">
+                    <th className="text-left py-2">Team</th>
+                    <th className="text-center py-2">Wins</th>
+                    <th className="text-center py-2">Losses</th>
+                    <th className="text-center py-2">Draws</th>
+                    <th className="text-center py-2 font-bold">Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...pointsTable.entries()]
+                    .sort((a, b) => b[1].points - a[1].points)
+                    .map(([team, stats]) => {
+                      // Find the display name for the team
+                      const displayName =
+                        Object.entries(TEAM_MAP).find(
+                          ([_, scoreTeam]) => scoreTeam === team
+                        )?.[0] || team;
+                      return (
+                        <tr key={team} className="border-b border-white/10">
+                          <td className="py-2 font-semibold">{displayName}</td>
+                          <td className="text-center py-2">{stats.wins}</td>
+                          <td className="text-center py-2">{stats.losses}</td>
+                          <td className="text-center py-2">{stats.draws}</td>
+                          <td className="text-center py-2 font-bold text-yellow-400">
+                            {stats.points}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

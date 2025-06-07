@@ -2,9 +2,14 @@
 
 ## Development
 
-The development instance of the website is running at http://localhost:5173/
+The development instance of the website is running at http://localhost:5173/. Prefer to use this and the browser screenshot tool to test your work at most of the times.
+
+Occasionally `bun test` and `bun run tsc` to test your work.
+
+Run `bun run build` only when you can't test it with above mentioned ways.
 
 ## Commands
+
 - Run tests: `bun test`
 - Run specific test: `bun test src/lexer.test.ts`
 - Build project: `bun build ./src/index.ts --compile --outfile scorelang`
