@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent } from "./components/ui/card";
 import { Button } from "./components/ui/button";
-import { Plus, Minus, Trophy, FileText, Target } from "lucide-react";
+import { Plus, Minus, Trophy, FileText, Target, Home } from "lucide-react";
 import {
   calculatePointsTable,
   Evaluator,
@@ -186,6 +186,16 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
       };
       return [...prev, newGame];
     });
+  };
+
+  const handleNewTournament = () => {
+    if (
+      confirm(
+        "Are you sure you want to start a new tournament? All current progress will be lost."
+      )
+    ) {
+      window.location.href = "/";
+    }
   };
 
   /* ────────────────────────── Render ────────────────────────── */
@@ -424,6 +434,22 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* New Tournament Button - placed at the bottom */}
+      <div className="mt-8 pt-4 border-t border-white/20">
+        <Button
+          variant="outline"
+          className="bg-red-500/20 text-red-100 border-red-300/30 hover:bg-red-500/30 hover:border-red-300/50 transition-all duration-200 text-sm px-6 py-2"
+          onClick={handleNewTournament}
+        >
+          <Home className="w-4 h-4 mr-2" />
+          Start New Tournament
+        </Button>
+        <p className="text-white/60 text-xs mt-2">
+          Warning: This will reset all progress. Save the current URL to retain
+          the current tournament.
+        </p>
+      </div>
     </div>
   );
 }

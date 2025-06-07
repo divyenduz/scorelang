@@ -2,6 +2,12 @@
 
 ScoreLang is a domain-specific language (DSL) for tracking and calculating football (soccer) tournament scores and standings.
 
+## 🌐 Live Web Interface
+
+Try ScoreLang in your browser at **[score.zoid.dev](https://score.zoid.dev)**
+
+**Demo**: [EPL 2024-2025 Season](https://score.zoid.dev/?tournament=i59scpckq6hdcthxfbj19)
+
 ## Project Structure
 
 This repository is organized as a monorepo with the following packages:
