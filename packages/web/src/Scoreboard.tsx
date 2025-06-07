@@ -169,7 +169,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
             return (
               <Card
                 key={`${game.home}-vs-${game.away}-${idx}`}
-                className={`w-full p-2 mb-2 transition-all duration-500 backdrop-blur-md bg-white/10 border-white/20 ${
+                className={`w-full p-2 sm:p-1 mb-2 transition-all duration-500 backdrop-blur-md bg-white/10 border-white/20 ${
                   isCurrent
                     ? "scale-105 shadow-xl bg-white/20 border-white/30"
                     : "opacity-60 scale-95"
@@ -179,7 +179,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                   {isCurrent && (
                     <div className="flex items-center gap-1">
                       <span className="text-sm">🎮</span>
-                      <h2 className="text-sm font-bold text-white">
+                      <h2 className="text-sm font-bold text-black">
                         Live Game
                       </h2>
                       <span className="text-sm">🎮</span>
@@ -206,23 +206,33 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                         </Button>
                       </div>
                     )}
-                    
+
                     <div className="bg-gradient-to-r from-blue-500 to-cyan-400 px-3 py-1 rounded-lg text-center flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 text-white">
-                        <span className="text-xs font-medium truncate">{game.home}</span>
-                        <span className="text-sm font-bold tabular-nums">{game.homeScore}</span>
+                        <span className="text-xs font-medium truncate">
+                          {game.home}
+                        </span>
+                        <span className="text-sm font-bold tabular-nums">
+                          {game.homeScore}
+                        </span>
                       </div>
                     </div>
-                    
-                    <span className="text-lg animate-pulse flex-shrink-0">⚡</span>
-                    
+
+                    <span className="text-lg animate-pulse flex-shrink-0">
+                      ⚡
+                    </span>
+
                     <div className="bg-gradient-to-r from-emerald-500 to-teal-400 px-3 py-1 rounded-lg text-center flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 text-white">
-                        <span className="text-xs font-medium truncate">{game.away}</span>
-                        <span className="text-sm font-bold tabular-nums">{game.awayScore}</span>
+                        <span className="text-xs font-medium truncate">
+                          {game.away}
+                        </span>
+                        <span className="text-sm font-bold tabular-nums">
+                          {game.awayScore}
+                        </span>
                       </div>
                     </div>
-                    
+
                     {/* Away team buttons (right side) */}
                     {isCurrent && (
                       <div className="flex flex-col gap-1 flex-shrink-0">
