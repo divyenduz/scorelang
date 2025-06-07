@@ -1,9 +1,16 @@
 import { match } from "ts-pattern";
-import { Evaluator } from "./evaluator";
+import { Evaluator, type GameResult } from "./evaluator";
 import Lexer from "./lexer";
 import { Parser } from "./parser";
 import invariant from "tiny-invariant";
 import { calculatePointsTable, printPointsTable } from "./utils";
+
+// Re-export types and utilities  
+export type { GameResult } from "./evaluator";
+export { calculatePointsTable } from "./utils";
+export { Evaluator } from "./evaluator";
+export { Lexer } from "./lexer";
+export { Parser } from "./parser";
 
 async function main() {
   // Try to read from file argument if provided
@@ -25,4 +32,6 @@ async function main() {
   printPointsTable(pointsTable);
 }
 
-await main();
+if (import.meta.main) {
+  await main();
+}
