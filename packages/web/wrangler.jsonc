@@ -17,5 +17,13 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "TOURNAMENT_DO",
+        "class_name": "TournamentDurableObject"
+      }
+    ]
+  },
   "vars": {}
 }

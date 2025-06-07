@@ -8,6 +8,7 @@ import {
   Lexer,
   Parser,
 } from "../../lang/src/index";
+import { useTournamentState } from "./hooks/useTournamentState";
 
 type Team = "🩷 Team A" | "⚪ Team B" | "⚫ Team C";
 
@@ -27,12 +28,13 @@ const TEAM_MAP: Record<Team, string> = {
   "⚫ Team C": "TeamC",
 };
 
-export default function Scoreboard() {
-  const [games, setGames] = useState<Game[]>([
-    { home: TEAMS[0]!, away: TEAMS[1]!, homeScore: 0, awayScore: 0 },
-  ]);
-  // Tournament state as scorelang text
-  const [tournamentText, setTournamentText] = useState<string>("");
+interface ScoreboardProps {
+  tournamentId: string;
+}
+
+export default function Scoreboard({ tournamentId }: ScoreboardProps) {
+  const { games, tournamentText, isLoading, setGames, setTournamentText } = useTournamentState(tournamentId);
+  
   // Active tab state
   const [activeTab, setActiveTab] = useState<"score" | "scorelang" | "table">(
     "score"
