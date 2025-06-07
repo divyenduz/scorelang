@@ -2,7 +2,7 @@
 
 ## Development
 
-The development instance of the website is running at http://localhost:5173/. Prefer to use this and the browser screenshot tool to test your work at most of the times.
+The development instance of the website is always running at http://localhost:5173/ (don't try to run it, if you can't reach the sever stop). Prefer to use this and the browser screenshot tool to test your work at most of the times.
 
 Occasionally `bun test` and `bun run tsc` to test your work.
 

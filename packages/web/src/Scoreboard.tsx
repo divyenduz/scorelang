@@ -116,42 +116,45 @@ export default function Scoreboard() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex flex-col sm:flex-row gap-2 w-full max-w-md mb-6">
+      <div className="flex gap-2 w-full max-w-lg mb-6">
         <Button
           variant={activeTab === "score" ? "default" : "outline"}
-          className={`flex-1 ${
+          className={`flex-1 text-xs sm:text-sm ${
             activeTab === "score"
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
               : "bg-white/10 text-white border-white/20 hover:bg-white/20"
           }`}
           onClick={() => setActiveTab("score")}
         >
-          <Target className="w-4 h-4 mr-2" />
-          Score Management
+          <Target className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Score</span>
+          <span className="sm:hidden">Score</span>
         </Button>
         <Button
           variant={activeTab === "scorelang" ? "default" : "outline"}
-          className={`flex-1 ${
+          className={`flex-1 text-xs sm:text-sm ${
             activeTab === "scorelang"
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
               : "bg-white/10 text-white border-white/20 hover:bg-white/20"
           }`}
           onClick={() => setActiveTab("scorelang")}
         >
-          <FileText className="w-4 h-4 mr-2" />
-          ScoreLang Text
+          <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Code</span>
+          <span className="sm:hidden">Code</span>
         </Button>
         <Button
           variant={activeTab === "table" ? "default" : "outline"}
-          className={`flex-1 ${
+          className={`flex-1 text-xs sm:text-sm ${
             activeTab === "table"
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
               : "bg-white/10 text-white border-white/20 hover:bg-white/20"
           }`}
           onClick={() => setActiveTab("table")}
         >
-          <Trophy className="w-4 h-4 mr-2" />
-          Points Table
+          <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+          <span className="hidden sm:inline">Table</span>
+          <span className="sm:hidden">Table</span>
         </Button>
       </div>
 
@@ -220,7 +223,7 @@ export default function Scoreboard() {
       {activeTab === "scorelang" && (
         <Card className="w-full backdrop-blur-md bg-white/10 border-white/20">
           <CardContent className="p-4 sm:p-6">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 text-center">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
               📝 Tournament (ScoreLang)
             </h3>
             {tournamentText ? (
@@ -228,7 +231,7 @@ export default function Scoreboard() {
                 {tournamentText}
               </pre>
             ) : (
-              <div className="text-white/60 text-center py-8">
+              <div className="text-gray-700 text-center py-8">
                 No games finalized yet. Complete some games in the Score Management tab to see ScoreLang output.
               </div>
             )}
@@ -239,7 +242,7 @@ export default function Scoreboard() {
       {activeTab === "table" && (
         <Card className="w-full backdrop-blur-md bg-white/10 border-white/20">
           <CardContent className="p-4 sm:p-6">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 text-center">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
               🏆 Points Table
             </h3>
             {pointsTable.size > 0 ? (
@@ -279,7 +282,7 @@ export default function Scoreboard() {
                 </table>
               </div>
             ) : (
-              <div className="text-white/60 text-center py-8">
+              <div className="text-gray-700 text-center py-8">
                 No points table available yet. Complete some games in the Score Management tab to see the points table.
               </div>
             )}
