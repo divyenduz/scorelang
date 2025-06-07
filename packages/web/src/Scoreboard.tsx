@@ -169,91 +169,80 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
             return (
               <Card
                 key={`${game.home}-vs-${game.away}-${idx}`}
-                className={`w-full p-4 sm:p-8 mb-4 transition-all duration-500 backdrop-blur-md bg-white/10 border-white/20 ${
+                className={`w-full p-2 mb-2 transition-all duration-500 backdrop-blur-md bg-white/10 border-white/20 ${
                   isCurrent
-                    ? "scale-105 shadow-2xl bg-white/20 border-white/30"
+                    ? "scale-105 shadow-xl bg-white/20 border-white/30"
                     : "opacity-60 scale-95"
                 }`}
               >
-                <CardContent className="flex flex-col items-center gap-4 sm:gap-6">
+                <CardContent className="flex flex-col items-center gap-2">
                   {isCurrent && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl sm:text-2xl">🎮</span>
-                      <h2 className="text-xl sm:text-2xl font-bold text-white">
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm">🎮</span>
+                      <h2 className="text-sm font-bold text-white">
                         Live Game
                       </h2>
-                      <span className="text-xl sm:text-2xl">🎮</span>
+                      <span className="text-sm">🎮</span>
                     </div>
                   )}
 
-                  <div className="flex flex-col sm:flex-row items-center gap-4 text-xl sm:text-2xl font-bold text-white">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-400 px-3 sm:px-4 py-2 rounded-xl text-center">
-                      {game.home}
+                  <div className="flex items-center gap-2 w-full max-w-lg">
+                    {/* Home team buttons (left side) */}
+                    {isCurrent && (
+                      <div className="flex flex-col gap-1 flex-shrink-0">
+                        <Button
+                          size="icon"
+                          className="h-6 w-6 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-sm transform hover:scale-110 transition-all duration-200"
+                          onClick={() => updateScore("home", 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          className="h-6 w-6 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-sm transform hover:scale-110 transition-all duration-200"
+                          onClick={() => updateScore("home", -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                    
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-400 px-3 py-1 rounded-lg text-center flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 text-white">
+                        <span className="text-xs font-medium truncate">{game.home}</span>
+                        <span className="text-sm font-bold tabular-nums">{game.homeScore}</span>
+                      </div>
                     </div>
-                    <span className="text-2xl sm:text-3xl animate-pulse">
-                      ⚡
-                    </span>
-                    <div className="bg-gradient-to-r from-emerald-500 to-teal-400 px-3 sm:px-4 py-2 rounded-xl text-center">
-                      {game.away}
+                    
+                    <span className="text-lg animate-pulse flex-shrink-0">⚡</span>
+                    
+                    <div className="bg-gradient-to-r from-emerald-500 to-teal-400 px-3 py-1 rounded-lg text-center flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 text-white">
+                        <span className="text-xs font-medium truncate">{game.away}</span>
+                        <span className="text-sm font-bold tabular-nums">{game.awayScore}</span>
+                      </div>
                     </div>
+                    
+                    {/* Away team buttons (right side) */}
+                    {isCurrent && (
+                      <div className="flex flex-col gap-1 flex-shrink-0">
+                        <Button
+                          size="icon"
+                          className="h-6 w-6 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-sm transform hover:scale-110 transition-all duration-200"
+                          onClick={() => updateScore("away", 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          className="h-6 w-6 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-sm transform hover:scale-110 transition-all duration-200"
+                          onClick={() => updateScore("away", -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-
-                  {isCurrent ? (
-                    <div className="flex items-center gap-2 sm:gap-4 w-full justify-center">
-                      <Button
-                        size="icon"
-                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-                        onClick={() => updateScore("home", 1)}
-                      >
-                        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </Button>
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-xl px-3 py-2 border border-white/30">
-                        <span className="text-2xl sm:text-3xl font-bold tabular-nums text-white drop-shadow-lg">
-                          {game.homeScore}
-                        </span>
-                      </div>
-                      <Button
-                        size="icon"
-                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-                        onClick={() => updateScore("home", -1)}
-                      >
-                        <Minus className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </Button>
-                      <span className="text-xl sm:text-2xl mx-2">-</span>
-                      <Button
-                        size="icon"
-                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-                        onClick={() => updateScore("away", 1)}
-                      >
-                        <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </Button>
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-xl px-3 py-2 border border-white/30">
-                        <span className="text-2xl sm:text-3xl font-bold tabular-nums text-white drop-shadow-lg">
-                          {game.awayScore}
-                        </span>
-                      </div>
-                      <Button
-                        size="icon"
-                        className="aspect-square h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
-                        onClick={() => updateScore("away", -1)}
-                      >
-                        <Minus className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-8 sm:gap-16">
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
-                        <span className="text-4xl sm:text-6xl font-bold tabular-nums text-white drop-shadow-lg">
-                          {game.homeScore}
-                        </span>
-                      </div>
-                      <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
-                        <span className="text-4xl sm:text-6xl font-bold tabular-nums text-white drop-shadow-lg">
-                          {game.awayScore}
-                        </span>
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             );
