@@ -42,9 +42,9 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
       const program = parser.parse();
       const evaluator = new Evaluator();
       const { results } = evaluator.evaluate(program);
-      
+
       const teamSet = new Set<string>();
-      results.forEach(result => {
+      results.forEach((result) => {
         if (result.type === "RESOLVED") {
           teamSet.add(result.winningTeam);
           teamSet.add(result.losingTeam);
@@ -53,7 +53,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
           teamSet.add(result.rightTeam);
         }
       });
-      
+
       const teams = Array.from(teamSet);
       return teams.length > 0 ? teams : ["TeamA", "TeamB", "TeamC"];
     } catch (error) {
@@ -174,7 +174,9 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
     setGames((prev) => {
       const last = prev[prev.length - 1]!;
       // Identify idle team (one that did NOT play last game)
-      const idle = extractedTeams.find((t) => t !== last.home && t !== last.away)!;
+      const idle = extractedTeams.find(
+        (t) => t !== last.home && t !== last.away
+      )!;
       // Persist the *away* team so one team appears twice in a row
       const newGame: Game = {
         home: last.away,
@@ -353,7 +355,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
               📝 ScoreLang Code
             </h3>
             <textarea
-              className="w-full text-white/90 bg-black/20 p-4 rounded-lg text-xs sm:text-sm font-mono overflow-x-auto min-h-[200px] resize-none border border-white/20 focus:border-white/40 focus:outline-none"
+              className="w-full text-white/90 bg-black/20 p-4 rounded-lg text-xs sm:text-sm font-mono overflow-x-auto min-h-[400px] resize-none border border-white/20 focus:border-white/40 focus:outline-none"
               value={tournamentText || ""}
               onChange={(e) => setTournamentText(() => e.target.value)}
               placeholder="No games finalized yet. Complete some games in the Score Management tab to see ScoreLang output, or write your own ScoreLang code here."
@@ -373,6 +375,7 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                 <table className="w-full text-black text-sm sm:text-base">
                   <thead>
                     <tr className="border-b border-gray-400">
+                      <th className="text-center py-2 px-2">Pos</th>
                       <th className="text-left py-2 px-2">Team</th>
                       <th className="text-center py-2 px-1">Wins</th>
                       <th className="text-center py-2 px-1">Losses</th>
@@ -385,10 +388,13 @@ export default function Scoreboard({ tournamentId }: ScoreboardProps) {
                   <tbody>
                     {[...pointsTable.entries()]
                       .sort((a, b) => b[1].points - a[1].points)
-                      .map(([team, stats]) => {
+                      .map(([team, stats], index) => {
                         return (
                           <tr key={team} className="border-b border-gray-300">
-                            <td className="py-2 px-2 font-semibold">
+                            <td className="text-center py-2 px-2 font-semibold">
+                              {index + 1}
+                            </td>
+                            <td className="text-left py-2 px-2 font-semibold">
                               {team}
                             </td>
                             <td className="text-center py-2 px-1">
